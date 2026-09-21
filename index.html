@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+    <head>
+        <!-- =========================================================
+                                     META
+        ========================================================== -->
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+
+        <!-- =========================================================
+                                  FAVICON
+        ========================================================== -->
+        <link
+            rel="icon"
+            type="image/png"
+            href="img/logo.png"
+        >
+
+
+        <!-- =========================================================
+                                    TÍTULO
+        ========================================================== -->
+        <title>Lista UC SIMO x ANEEL</title>
+
+
+        <!-- =========================================================
+                                     CSS
+        ========================================================== -->
+        <link rel="stylesheet" href="css/variaveis.css">
+        <link rel="stylesheet" href="css/estilo.css">
+        <link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/cabecalho.css">
+        <link rel="stylesheet" href="css/tabela.css">
+        <link rel="stylesheet" href="css/responsivo.css">
+    </head>
+
+
+    <body>
+        <div class="pagina">
+
+            <!-- =====================================================
+                                       CABEÇALHO
+            ====================================================== -->
+            <header class="cabecalho">
+
+
+                <!-- -------------------------------------------------
+                                         LOGO
+                -------------------------------------------------- -->
+                <div class="logo">
+                    <img
+                        src="img/logo.png"
+                        alt="Logo Celesc"
+                    >
+                </div>
+
+
+                <!-- -------------------------------------------------
+                                        TÍTULO
+                -------------------------------------------------- -->
+                <h1>
+                    Lista UC SIMO x ANEEL
+                </h1>
+
+
+                <!-- -------------------------------------------------
+                                 INFORMAÇÕES DO TOPO
+                -------------------------------------------------- -->
+                <div class="informacoes-topo">
+                    <!-- Último dado
+                    <div class="info-topo">
+                        <div id="dtProcessamento">
+                            --
+                        </div>
+
+                        <small>
+                            Último Dado
+                        </small>
+                    </div>-->
+
+
+                    <!-- Hora atual -->
+                    <div class="info-topo">
+                        <div id="relogioAtual">
+                            --:--:--
+                        </div>
+
+                        <small>
+                            Hora Atual
+                        </small>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =====================================================
+                                      CONTEÚDO
+            ====================================================== -->
+            <main class="conteudo">
+
+
+                <!-- =================================================
+                                      PESQUISA
+                ================================================== -->
+                <section class="painel pesquisa">
+
+
+                    <!-- Título do painel -->
+                    <div class="titulo">
+                        Preencher apenas um dos campos (apenas números), e clicar em "Pesquisar")
+                    </div>
+
+
+                    <!-- ------------------------------------------------
+                                    CAMPOS DE PESQUISA
+                    ------------------------------------------------- -->
+                    <div class="campos-pesquisa">
+
+
+                        <!-- UC-SIMO -->
+                        <div class="campo-pesquisa">
+
+                            <label
+                                for="inputUcSimo"
+                            >
+                                UC-SIMO
+                            </label>
+
+                            <input
+                                id="inputUcSimo"
+                                type="text"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                placeholder="Digite o código UC-SIMO"
+                            >
+
+                        </div>
+
+
+                        <!-- UC-ANEEL -->
+                        <div class="campo-pesquisa">
+
+                            <label
+                                for="inputUcAneel"
+                            >
+                                UC-ANEEL
+                            </label>
+
+                            <input
+                                id="inputUcAneel"
+                                type="text"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                placeholder="Digite o código UC-ANEEL"
+                            >
+
+                        </div>
+
+
+                        <!-- Botão -->
+                        <div class="acao-pesquisa">
+
+                            <button
+                                id="btnPesquisar"
+                                type="button"
+                            >
+                                Pesquisar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ------------------------------------------------
+                                     MENSAGEM DA PESQUISA
+                    ------------------------------------------------- -->
+
+                    <div
+                        id="mensagemPesquisa"
+                        class="mensagem-pesquisa"
+                    >
+                    </div>
+
+
+                </section>
+
+
+
+                <!-- =================================================
+                                      RESULTADO
+                ================================================== -->
+
+                <section class="painel resultado">
+
+                    <!-- Título -->
+                    <div class="titulo">
+
+                        Resultado
+
+                        <span
+                            id="contadorResultados"
+                            class="contador-resultados"
+                        >
+                        </span>
+
+                    </div>
+
+
+                    <!-- ------------------------------------------------
+                                         TABELA
+                    ------------------------------------------------- -->
+
+                    <div class="tabela-scroll">
+                        <table
+                            id="tabelaResultado"
+                        >
+
+                            <thead>
+                                <tr>
+                                    <th> UC-SIMO</th>
+                                    <th> UC-ANEEL</th>
+                                    <th> Município </th>
+                                    <th> Bairro </th>
+                                    <th> Conjunto </th>
+                                    <th> SE </th>
+                                    <th> Alimentador </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="tbodyResultado"
+                            >
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+
+
+        <!-- =========================================================
+                                MENSAGEM DO SISTEMA
+        ========================================================== -->
+        <div
+            id="mensagemSistema"
+            class="mensagem-sistema"
+        >
+        </div>
+
+
+        <!-- =========================================================
+                                      JAVASCRIPT
+        ========================================================== -->
+        <script
+            src="js/cabecalho.js"
+        ></script>
+
+        <script
+            src="js/main.js"
+        ></script>
+    </body>
+</html>

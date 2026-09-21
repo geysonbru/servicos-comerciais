@@ -1,0 +1,309 @@
+/*=========================================================
+Projeto : Lista UC SIMO x ANEEL
+Arquivo : layout.css
+=========================================================*/
+
+
+/*=========================================================
+Configuração geral
+=========================================================*/
+
+* {
+    box-sizing: border-box;
+}
+
+
+/*=========================================================
+Página
+=========================================================*/
+
+body {
+    margin: 0;
+    height: 100%;
+
+    overflow: hidden;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    background: var(--bg);
+    color: var(--texto);
+}
+
+
+/*=========================================================
+Container principal
+=========================================================*/
+
+.pagina {
+    width: 100%;
+    height: 100vh;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--gap);
+
+    padding: 12px;
+}
+
+
+/*=========================================================
+Conteúdo
+=========================================================*/
+
+.conteudo {
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--gap);
+
+    align-items: stretch;
+}
+
+
+/*=========================================================
+Painéis
+=========================================================*/
+
+.painel {
+    min-height: 0;
+
+    background: var(--card);
+
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+}
+
+
+/*=========================================================
+Título dos painéis
+=========================================================*/
+
+.titulo {
+    background: var(--azul);
+
+    color: white;
+
+    padding: 8px 10px;
+
+    font-weight: bold;
+
+    border-radius:
+        var(--raio)
+        var(--raio)
+        0
+        0;
+}
+
+
+/*=========================================================
+Painel de pesquisa
+=========================================================*/
+
+.pesquisa {
+    flex: 0 0 auto;
+}
+
+
+/*=========================================================
+Campos de pesquisa
+=========================================================*/
+
+.campos-pesquisa {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 12px;
+
+    padding: 14px;
+}
+
+
+/*=========================================================
+Campo individual
+=========================================================*/
+
+.campo-pesquisa {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/*=========================================================
+Rótulo
+=========================================================*/
+
+.campo-pesquisa label {
+    font-weight: 600;
+
+    font-size: 14px;
+}
+
+
+/*=========================================================
+Campo de entrada
+=========================================================*/
+
+.campo-pesquisa input {
+    width: 100%;
+
+    height: 38px;
+
+    padding: 6px 10px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    color: var(--texto);
+
+    background: white;
+
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+
+    outline: none;
+}
+
+
+/*---------------------------------------------------------
+Campo em foco
+---------------------------------------------------------*/
+
+.campo-pesquisa input:focus {
+    border-color: var(--azul);
+
+    box-shadow:
+        0 0 0 2px rgba(0, 103, 177, .15);
+}
+
+
+/*=========================================================
+Área do botão
+=========================================================*/
+
+.acao-pesquisa {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: flex-end;
+}
+
+
+/*=========================================================
+Botão pesquisar
+=========================================================*/
+
+.acao-pesquisa button {
+    height: 38px;
+
+    padding: 6px 22px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: white;
+
+    background: var(--azul);
+
+    border: 1px solid var(--azul);
+    border-radius: var(--raio);
+
+    cursor: pointer;
+
+    transition:
+        background-color .15s ease,
+        transform .05s ease;
+}
+
+
+/*---------------------------------------------------------
+Botão ao passar o mouse
+---------------------------------------------------------*/
+
+.acao-pesquisa button:hover {
+    filter: brightness(.92);
+}
+
+
+/*---------------------------------------------------------
+Botão pressionado
+---------------------------------------------------------*/
+
+.acao-pesquisa button:active {
+    transform: translateY(1px);
+}
+
+
+/*=========================================================
+Mensagem da pesquisa
+=========================================================*/
+
+.mensagem-pesquisa {
+    min-height: 0;
+
+    padding:
+        0
+        14px
+        10px;
+
+    font-size: 13px;
+}
+
+
+/*=========================================================
+Painel de resultado
+=========================================================*/
+
+.resultado {
+    flex: 1;
+
+    width: 100%;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/*=========================================================
+Contador de resultados
+=========================================================*/
+
+.contador-resultados {
+    margin-left: 8px;
+
+    font-weight: normal;
+    font-size: 13px;
+
+    opacity: .9;
+}
+
+
+/*=========================================================
+Área de rolagem da tabela
+=========================================================*/
+
+.tabela-scroll {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow: auto;
+}

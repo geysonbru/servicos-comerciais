@@ -1,0 +1,14 @@
+/*==========================================================
+Projeto : Lista UC SIMO x ANEEL
+Arquivo : estilo.css
+==========================================================*/
+
+/*==========================================================
+Importando demais CSS
+==========================================================*/
+
+@import url("variaveis.css");
+@import url("layout.css");
+@import url("cabecalho.css");
+@import url("tabela.css");
+@import url("responsivo.css");
