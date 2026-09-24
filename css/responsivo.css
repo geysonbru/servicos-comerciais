@@ -1,0 +1,145 @@
+/*=========================================================
+Projeto : Lista UC SIMO x ANEEL
+Arquivo : responsivo.css
+=========================================================*/
+
+
+/*=========================================================
+Telas menores
+=========================================================*/
+
+@media (max-width: 900px) {
+
+    .cabecalho {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .cabecalho h1 {
+        order: 2;
+        flex-basis: 100%;
+        font-size: 21px;
+    }
+
+    .logo {
+        order: 1;
+    }
+
+    .informacoes-topo {
+        order: 3;
+        margin-left: auto;
+    }
+
+
+    /*---------------------------------------------------------
+    Campos de pesquisa
+    ---------------------------------------------------------*/
+
+    .campos-pesquisa {
+        flex-wrap: wrap;
+    }
+
+    .campo-pesquisa {
+        flex: 1 1 200px;
+    }
+
+    .acao-pesquisa {
+        flex: 0 0 auto;
+    }
+
+}
+
+
+/*=========================================================
+Celulares
+=========================================================*/
+
+@media (max-width: 600px) {
+
+    .pagina {
+        padding: 6px;
+        gap: 8px;
+    }
+
+
+    /*---------------------------------------------------------
+    Cabeçalho
+    ---------------------------------------------------------*/
+
+    .cabecalho {
+        padding: 6px;
+    }
+
+    .logo img {
+        width: 48px;
+    }
+
+    .cabecalho h1 {
+        font-size: 18px;
+    }
+
+    .informacoes-topo {
+        width: 100%;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .info-topo {
+        min-width: 120px;
+        padding: 3px 6px;
+    }
+
+    .info-topo div {
+        font-size: 0.9rem;
+    }
+
+    .info-topo small {
+        font-size: 0.75rem;
+    }
+
+
+    /*---------------------------------------------------------
+    Pesquisa
+    ---------------------------------------------------------*/
+
+    .campos-pesquisa {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .campo-pesquisa {
+        width: 100%;
+    }
+
+    .campo-pesquisa input {
+        width: 100%;
+    }
+
+    .acao-pesquisa {
+        width: 100%;
+    }
+
+    .acao-pesquisa button {
+        width: 100%;
+    }
+
+
+    /*---------------------------------------------------------
+    Títulos dos painéis
+    ---------------------------------------------------------*/
+
+    .titulo {
+        padding: 7px 8px;
+    }
+
+
+    /*---------------------------------------------------------
+    Tabela
+    ---------------------------------------------------------*/
+
+    .tabela-scroll {
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+}

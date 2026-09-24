@@ -1,0 +1,173 @@
+/*=========================================================
+Tabela de Serviços
+=========================================================*/
+
+.tabela {
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    width: 100%;
+
+    min-width: 0;
+
+}
+
+
+/*=========================================================
+Área de rolagem
+=========================================================*/
+
+.tabela-scroll {
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    overflow-x: auto;
+
+}
+
+
+/*=========================================================
+Tabela
+=========================================================*/
+
+#tabelaServicos {
+
+    width: max-content;
+
+    min-width: 100%;
+
+    border-collapse: collapse;
+
+    white-space: nowrap;
+
+}
+
+
+/*=========================================================
+Cabeçalho
+=========================================================*/
+
+#tabelaServicos th {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 5;
+
+    padding: 6px 8px;
+
+    background: var(--azul);
+
+    color: white;
+
+    border-bottom: 1px solid #bfc7cf;
+
+    font-size: 13px;
+
+    text-align: center;
+
+}
+
+
+/*=========================================================
+Células
+=========================================================*/
+
+#tabelaServicos td {
+
+    padding: 4px 8px;
+
+    border-bottom: 1px solid #ddd;
+
+    font-size: 13px;
+
+    text-align: left;
+
+}
+
+
+/*=========================================================
+Colunas numéricas
+=========================================================*/
+
+#tabelaServicos td:nth-child(1),
+#tabelaServicos td:nth-child(2),
+#tabelaServicos td:nth-child(3),
+#tabelaServicos td:nth-child(11),
+#tabelaServicos td:nth-child(12),
+#tabelaServicos td:nth-child(13) {
+
+    text-align: right;
+
+}
+
+
+/*=========================================================
+Datas
+=========================================================*/
+
+#tabelaServicos td:nth-child(8),
+#tabelaServicos td:nth-child(9),
+#tabelaServicos td:nth-child(10) {
+
+    text-align: center;
+
+}
+
+
+/*=========================================================
+Hover
+=========================================================*/
+
+#tabelaServicos tbody tr:hover {
+
+    background: #f3f7fa;
+
+}
+
+
+/*=========================================================
+Tempo excedido > 0
+
+Fica apenas como destaque visual.
+A regra do valor continua sendo calculada pelo SQL.
+=========================================================*/
+
+.tempo-excedido {
+
+    font-weight: bold;
+
+    color: #b00020;
+
+}
+
+
+/*=========================================================
+Compensação
+=========================================================*/
+
+.valor-compensacao {
+
+    font-variant-numeric: tabular-nums;
+
+}
+
+
+/*=========================================================
+Título da tabela
+=========================================================*/
+
+#tituloTabela {
+
+    text-align: center;
+
+}

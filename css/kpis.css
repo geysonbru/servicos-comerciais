@@ -1,0 +1,267 @@
+/*=========================================================
+                         KPIs
+=========================================================*/
+
+
+/*=========================================================
+Área dos KPIs
+=========================================================*/
+
+.kpis {
+
+    display: flex;
+
+    flex-direction: row;
+
+    gap: var(--gap);
+
+    width: 100%;
+
+    margin-bottom: var(--gap);
+
+    /*
+       Não permite que os cards pulem para outra linha.
+    */
+
+    flex-wrap: nowrap;
+
+}
+
+
+/*=========================================================
+Cards
+=========================================================*/
+
+.kpis .card {
+
+    flex: 1;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    background: var(--card);
+
+    border: 1px solid var(--borda);
+
+    border-radius: var(--raio);
+
+    padding: 12px 14px;
+
+    min-height: 82px;
+
+    /*
+       Organização interna
+    */
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    /*
+       Acabamento visual
+    */
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.08);
+
+}
+
+
+/*=========================================================
+Título dos cards
+=========================================================*/
+
+.kpis .card h3 {
+
+    margin: 0 0 8px 0;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+    color: var(--texto);
+
+}
+
+
+/*=========================================================
+Valor dos KPIs
+=========================================================*/
+
+.kpis .card > span:not(.icone-filtro):not(.badge-filtros) {
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    line-height: 1.1;
+
+    color: var(--azul);
+
+}
+
+
+/*=========================================================
+                    CARD DOS FILTROS
+=========================================================*/
+
+.kpis .card-filtro {
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+/*=========================================================
+Título "Filtros"
+=========================================================*/
+
+.card-filtro h3 {
+
+    margin-bottom: 8px;
+
+}
+
+
+/*=========================================================
+Ícone + quantidade de filtros
+=========================================================*/
+
+.filtro-icone-contador {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+}
+
+
+/*=========================================================
+Ícone dos filtros
+=========================================================*/
+
+.card-filtro .icone-filtro {
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    color: var(--azul);
+
+}
+
+
+/*=========================================================
+Quantidade de filtros ativos
+=========================================================*/
+
+.card-filtro .badge-filtros {
+
+    min-width: 22px;
+
+    height: 22px;
+
+    padding: 0 6px;
+
+    box-sizing: border-box;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--azul);
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    line-height: 1;
+
+}
+
+
+/*=========================================================
+Efeito ao passar o mouse no card de filtros
+=========================================================*/
+
+.kpis .card-filtro:hover {
+
+    background: var(--azul);
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.15);
+
+}
+
+
+/*=========================================================
+Quando o mouse passa sobre o card,
+   o título e o ícone ficam brancos
+=========================================================*/
+
+.kpis .card-filtro:hover h3,
+.kpis .card-filtro:hover .icone-filtro {
+
+    color: white;
+
+}
+
+
+/*=========================================================
+O contador continua destacado mesmo no hover
+=========================================================*/
+
+.kpis .card-filtro:hover .badge-filtros {
+
+    background: white;
+
+    color: var(--azul);
+
+}
+
+
+/*=========================================================
+Telas menores
+=========================================================*/
+
+@media (max-width: 1100px) {
+
+    .kpis {
+
+        overflow-x: auto;
+
+    }
+
+    .kpis .card {
+
+        flex: 0 0 150px;
+
+    }
+
+}

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <link rel="icon" type="image/png" href="img/logo.png">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Acompanhamento de Serviços</title>
+
+    <link rel="stylesheet" href="css/estilo.css">
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <!-- =========================================================
+                         CABEÇALHO
+    ========================================================== -->
+
+    <header class="cabecalho">
+
+        <div class="logo">
+
+            <img
+                src="img/logo.png"
+                alt="Logo Celesc"
+            >
+
+        </div>
+
+        <h1>
+            Acompanhamento de Serviços
+        </h1>
+
+        <div class="informacoes-topo">
+
+            <div class="info-topo">
+
+                <div id="dtProcessamento">
+                    --
+                </div>
+
+                <small>
+                    Último Dado
+                </small>
+
+            </div>
+
+
+            <div class="info-topo">
+
+                <div id="dtAtualizacaoPagina">
+                    --
+                </div>
+
+                <small>
+                    Atualização da Página
+                </small>
+
+            </div>
+
+
+            <div class="info-topo">
+
+                <div id="relogioAtual">
+                    --:--:--
+                </div>
+
+                <small>
+                    Hora Atual
+                </small>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+                              KPIs
+    ========================================================== -->
+
+    <section class="kpis">
+
+        <!-- -----------------------------------------------------
+                         BOTÃO DOS FILTROS
+        ------------------------------------------------------ -->
+
+        <div
+            class="card card-filtro"
+            id="btnAbrirFiltros"
+            role="button"
+            tabindex="0"
+            title="Abrir filtros"
+        >
+
+            <h3>
+                Filtros
+            </h3>
+
+
+            <!--
+                Ícone e quantidade ficam lado a lado.
+            -->
+
+            <div class="filtro-icone-contador">
+
+                <span class="icone-filtro">
+                    ☰
+                </span>
+
+                <span
+                    id="quantidadeFiltros"
+                    class="badge-filtros"
+                >
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         TOTAL DE SERVIÇOS
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Total de Serviços
+            </h3>
+
+            <span id="kpiTotalServicos">
+                -
+            </span>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         SERVIÇOS ATRASADOS
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Serviços Atrasados
+            </h3>
+
+            <span id="kpiServicosAtrasados">
+                -
+            </span>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         REALIZADOS HOJE
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Realizados Hoje
+            </h3>
+
+            <span id="kpiRealizadosHoje">
+                -
+            </span>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         VENCENDO HOJE
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Vencendo Hoje
+            </h3>
+
+            <span id="kpiVencendoHoje">
+                -
+            </span>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         COMPENSAÇÃO HOJE
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Total a Compensar Hoje
+            </h3>
+
+            <span id="kpiCompensacaoHoje">
+                -
+            </span>
+
+        </div>
+
+
+        <!-- -----------------------------------------------------
+                         COMPENSAÇÃO AMANHÃ
+        ------------------------------------------------------ -->
+
+        <div class="card">
+
+            <h3>
+                Total a Compensar Amanhã
+            </h3>
+
+            <span id="kpiCompensacaoAmanha">
+                -
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+                           CONTEÚDO
+    ========================================================== -->
+
+    <main class="conteudo">
+
+
+        <!-- =====================================================
+                              TABELA
+        ====================================================== -->
+
+        <section class="painel tabela">
+
+            <div class="tabela-scroll">
+
+                <table id="tabelaServicos">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Nr. Doc. SIMO
+                            </th>
+
+                            <th>
+                                Nr. Doc. SAP
+                            </th>
+
+                            <th>
+                                UC
+                            </th>
+
+                            <th>
+                                Agência
+                            </th>
+
+                            <th>
+                                Serviço
+                            </th>
+
+                            <th>
+                                Centro Trabalho
+                            </th>
+
+                            <th>
+                                Tipo Centro de Trabalho
+                            </th>
+
+                            <th>
+                                Data Abertura
+                            </th>
+
+                            <th>
+                                Data Limite Exec.
+                            </th>
+
+                            <th>
+                                Data Conclusão
+                            </th>
+
+                            <th>
+                                Tempo Excedido
+                            </th>
+
+                            <th>
+                                Compensação Hoje
+                            </th>
+
+                            <th>
+                                Compensação Amanhã
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tbodyServicos">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =============================================================
+                     PAINEL LATERAL DE FILTROS
+============================================================== -->
+
+<div
+    id="overlayFiltros"
+    class="overlay-filtros"
+>
+</div>
+
+
+<aside
+    id="painelFiltros"
+    class="menu-filtros"
+>
+
+    <div class="menu-filtros-cabecalho">
+
+        <h2>
+            Filtros
+        </h2>
+
+        <button
+            id="btnFecharFiltros"
+            class="btn-fechar"
+            type="button"
+            title="Fechar filtros"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <!-- =========================================================
+                            REGIONAL
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Regional
+        </div>
+
+        <label class="item-filtro destaque">
+
+            <input
+                type="checkbox"
+                id="regionalTodas"
+                checked
+            >
+
+            <span>
+                Todas
+            </span>
+
+        </label>
+
+        <div id="listaRegionais">
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+                         TIPO DE SERVIÇO
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Tipo de Serviço
+        </div>
+
+        <label class="item-filtro destaque">
+
+            <input
+                type="checkbox"
+                id="tipoServicoTodos"
+                checked
+            >
+
+            <span>
+                Todos
+            </span>
+
+        </label>
+
+        <div id="listaTiposServico">
+
+            <label class="item-filtro">
+
+                <input
+                    type="checkbox"
+                    class="check-tipo-servico"
+                    value="CN"
+                    checked
+                >
+
+                <span>
+                    CN
+                </span>
+
+            </label>
+
+
+            <label class="item-filtro">
+
+                <input
+                    type="checkbox"
+                    class="check-tipo-servico"
+                    value="CT"
+                    checked
+                >
+
+                <span>
+                    CT
+                </span>
+
+            </label>
+
+
+            <label class="item-filtro">
+
+                <input
+                    type="checkbox"
+                    class="check-tipo-servico"
+                    value="MI"
+                    checked
+                >
+
+                <span>
+                    MI
+                </span>
+
+            </label>
+
+
+            <label class="item-filtro">
+
+                <input
+                    type="checkbox"
+                    class="check-tipo-servico"
+                    value="NT"
+                    checked
+                >
+
+                <span>
+                    NT
+                </span>
+
+            </label>
+
+
+            <label class="item-filtro">
+
+                <input
+                    type="checkbox"
+                    class="check-tipo-servico"
+                    value="RE"
+                    checked
+                >
+
+                <span>
+                    RE
+                </span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+                         PESQUISA UC
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Unidade Consumidora
+        </div>
+
+        <input
+            id="filtroUC"
+            class="campo-filtro"
+            type="text"
+            placeholder="Pesquisar UC..."
+            autocomplete="off"
+        >
+
+    </section>
+
+
+    <!-- =========================================================
+                         PESQUISA OS
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Ordem de Serviço
+        </div>
+
+        <input
+            id="filtroOS"
+            class="campo-filtro"
+            type="text"
+            placeholder="Pesquisar OS..."
+            autocomplete="off"
+        >
+
+    </section>
+
+
+    <!-- =========================================================
+                     TIPO CENTRO DE TRABALHO
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Tipo Centro de Trabalho
+        </div>
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="tipoCentro"
+                value="TODOS"
+                checked
+            >
+
+            <span>
+                Todos
+            </span>
+
+        </label>
+
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="tipoCentro"
+                value="CELESC"
+            >
+
+            <span>
+                CELESC
+            </span>
+
+        </label>
+
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="tipoCentro"
+                value="EMPREITEIRA"
+            >
+
+            <span>
+                Empreiteira
+            </span>
+
+        </label>
+
+    </section>
+
+
+    <!-- =========================================================
+                         CENTRO DE TRABALHO
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Centro de Trabalho
+        </div>
+
+        <label class="item-filtro destaque">
+
+            <input
+                type="checkbox"
+                id="centroTodos"
+                checked
+            >
+
+            <span>
+                Todos
+            </span>
+
+        </label>
+
+        <div
+            id="listaCentrosTrabalho"
+            class="lista-opcoes"
+        >
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+                         STATUS DO SERVIÇO
+    ========================================================== -->
+
+    <section class="grupo-filtro">
+
+        <div class="titulo-filtro">
+            Status do Serviço
+        </div>
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="statusServico"
+                value="TODOS"
+                checked
+            >
+
+            <span>
+                Todos
+            </span>
+
+        </label>
+
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="statusServico"
+                value="CONCLUIDO"
+            >
+
+            <span>
+                Concluído
+            </span>
+
+        </label>
+
+
+        <label class="item-filtro">
+
+            <input
+                type="radio"
+                name="statusServico"
+                value="NAO_CONCLUIDO"
+            >
+
+            <span>
+                Não Concluído
+            </span>
+
+        </label>
+
+    </section>
+
+
+    <!-- =========================================================
+                         BOTÕES
+    ========================================================== -->
+
+    <div class="acoes-filtros">
+
+        <button
+            id="btnLimparFiltros"
+            class="btn-filtro btn-limpar"
+            type="button"
+        >
+            Limpar filtros
+        </button>
+
+
+        <button
+            id="btnAplicarFiltros"
+            class="btn-filtro btn-aplicar"
+            type="button"
+        >
+            Aplicar
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =============================================================
+                           SCRIPTS
+============================================================== -->
+
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cabecalho.js"></script>
+<script src="js/tabela.js"></script>
+<script src="js/kpis.js"></script>
+<script src="js/filtros.js"></script>
+<script src="js/main.js"></script>
+
+
+<div
+    id="mensagemSistema"
+    class="mensagem-sistema"
+>
+</div>
+
+</body>
+
+</html>
