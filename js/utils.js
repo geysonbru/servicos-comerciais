@@ -222,37 +222,78 @@ function obterCampo(
 }
 
 
+
 /*========================================================
-Normaliza uma linha do V_DOCUMENTO
+Normaliza uma linha
 
-Aqui concentramos o "de-para" entre SQL e interface.
+Converte os nomes utilizados pelo JSON publicado pelo Python
+para os nomes internos utilizados pelo JavaScript.
 
-Quando fecharmos o SQL final, poderemos reduzir essa função
-para um único nome por campo.
+O Python atualmente publica a tabela usando os nomes:
+
+    Nr. Doc. SIMO
+    Nr. Doc. SAP
+    UC
+    Agência
+    Serviço
+    Centro Trabalho
+    Tipo Centro de Trabalho
+    Data Abertura
+    Data Limite Exec.
+    Data Conclusão
+    Tempo Excedido
+    Compensação Hoje
+    Compensação Amanhã
+
+Também mantemos alguns nomes técnicos como compatibilidade.
 ========================================================*/
 
 function normalizarLinha(linha) {
+
+    /*--------------------------------------------------------
+    Data de saída / conclusão
+
+    Neste momento o JSON publicado não contém DT_SAIDA.
+    Para o frontend, a Data Conclusão representa a conclusão
+    do serviço.
+    --------------------------------------------------------*/
 
     const dtSaida =
         obterCampo(
             linha,
             [
                 "DT_SAIDA",
-                "Data Saída"
+                "Data Saída",
+                "DT_CONCLUSAO",
+                "Data Conclusão"
             ]
         );
+
+
+    /*--------------------------------------------------------
+    Status
+
+    Mantemos a possibilidade de utilizar um status explícito
+    no futuro.
+
+    Quando ele não existir, inferimos pelo preenchimento da
+    Data de Conclusão.
+    --------------------------------------------------------*/
 
     const statusBruto =
         obterCampo(
             linha,
             [
                 "Status_atendimento",
-                "STATUS_ATENDIMENTO"
+                "STATUS_ATENDIMENTO",
+                "Status"
             ]
         );
 
+
     let status =
         statusBruto;
+
 
     if (!status) {
 
@@ -263,139 +304,222 @@ function normalizarLinha(linha) {
 
     }
 
+
+    /*--------------------------------------------------------
+    Retorna a estrutura normalizada.
+    --------------------------------------------------------*/
+
     return {
 
-        original: linha,
+        /*----------------------------------------------------
+        Mantemos a linha original para eventuais usos futuros.
+        ----------------------------------------------------*/
+        original:
+            linha,
 
+
+        /*----------------------------------------------------
+        Nr. Doc. SIMO
+        ----------------------------------------------------*/
         nrDocumentoSimo:
             obterCampo(
                 linha,
                 [
+                    "Nr. Doc. SIMO",
                     "NR_DOCUMENTO_SIMO",
                     "NR_DOCUMENTO_SIM0",
                     "NR_DOCUMENTO"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Nr. Doc. SAP
+        ----------------------------------------------------*/
         nrDocumentoSap:
             obterCampo(
                 linha,
                 [
+                    "Nr. Doc. SAP",
+                    "NR_PROTOCOLO_CLIENTE",
                     "NR_DOCUMENTO_SAP",
-                    "NR_OS_SAP",
-                    "NR_DOCUMENTO_SAP"
+                    "NR_OS_SAP"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Unidade Consumidora
+        ----------------------------------------------------*/
         uc:
             obterCampo(
                 linha,
                 [
-                    "NR_UNIDADE_CONSUMIDORA",
-                    "UC"
+                    "UC",
+                    "NR_UNIDADE_CONSUMIDORA"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Agência
+        ----------------------------------------------------*/
         agencia:
             obterCampo(
                 linha,
                 [
+                    "Agência",
                     "NM_REGIONAL"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Regional
+
+        Por enquanto utilizamos a mesma origem de Agência,
+        pois essa é a informação publicada no JSON atual.
+        ----------------------------------------------------*/
         regional:
             obterCampo(
                 linha,
                 [
+                    "Agência",
                     "NM_REGIONAL"
                 ]
             ),
 
-        nrDocumentoSap:
-            obterCampo(
-                linha,
-                [
-                    "NR_PROTOCOLO_CLIENTE"
-                ]
-            ),
 
+        /*----------------------------------------------------
+        Tipo de Serviço
+
+        O JSON atual não publica uma coluna específica
+        TP_SERVICO.
+
+        Mantemos os nomes técnicos caso essa coluna seja
+        acrescentada futuramente.
+        ----------------------------------------------------*/
         tpServico:
             String(
                 obterCampo(
                     linha,
                     [
-                        "TP_SERVICO"
+                        "TP_SERVICO",
+                        "Tipo Serviço"
                     ],
                     ""
                 ) || ""
             )
-            .trim()
-            .toUpperCase(),
+                .trim()
+                .toUpperCase(),
 
+
+        /*----------------------------------------------------
+        Serviço
+        ----------------------------------------------------*/
         servico:
             obterCampo(
                 linha,
                 [
+                    "Serviço",
                     "NM_SERVICO",
                     "SG_SERVICO"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Centro de Trabalho
+        ----------------------------------------------------*/
         centroTrabalho:
             obterCampo(
                 linha,
                 [
+                    "Centro Trabalho",
                     "CD_CENTRO_TRABALHO",
                     "CENTRO_TRABALHO"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Tipo Centro de Trabalho
+        ----------------------------------------------------*/
         tipoCentroTrabalho:
             obterCampo(
                 linha,
                 [
+                    "Tipo Centro de Trabalho",
                     "TP_CENTRO_TRABALHO",
                     "TIPO_CENTRO_TRABALHO"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Data de Abertura
+        ----------------------------------------------------*/
         dataAbertura:
             obterCampo(
                 linha,
                 [
+                    "Data Abertura",
                     "DT_ABERTURA"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Data Limite
+        ----------------------------------------------------*/
         dataLimite:
             obterCampo(
                 linha,
                 [
+                    "Data Limite Exec.",
                     "Data Limite",
+                    "DT_LIMITE_EXECUCAO_SERVICO",
                     "DATA_LIMITE"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Data Limite original
+        ----------------------------------------------------*/
         dataLimiteOriginal:
             obterCampo(
                 linha,
                 [
+                    "Data Limite Exec.",
                     "DT_LIMITE_EXECUCAO_SERVICO"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Data de Conclusão
+        ----------------------------------------------------*/
         dataConclusao:
             obterCampo(
                 linha,
                 [
+                    "Data Conclusão",
                     "DT_CONCLUSAO",
                     "DT_SAIDA"
                 ]
             ),
 
+
+        /*----------------------------------------------------
+        Data de saída
+        ----------------------------------------------------*/
         dtSaida,
 
+
+        /*----------------------------------------------------
+        Tempo Excedido
+        ----------------------------------------------------*/
         tempoExcedido:
             obterCampo(
                 linha,
@@ -406,6 +530,10 @@ function normalizarLinha(linha) {
                 0
             ),
 
+
+        /*----------------------------------------------------
+        Compensação Hoje
+        ----------------------------------------------------*/
         compensacaoHoje:
             obterCampo(
                 linha,
@@ -416,6 +544,10 @@ function normalizarLinha(linha) {
                 0
             ),
 
+
+        /*----------------------------------------------------
+        Compensação Amanhã
+        ----------------------------------------------------*/
         compensacaoAmanha:
             obterCampo(
                 linha,
@@ -426,6 +558,10 @@ function normalizarLinha(linha) {
                 0
             ),
 
+
+        /*----------------------------------------------------
+        Status
+        ----------------------------------------------------*/
         status
 
     };

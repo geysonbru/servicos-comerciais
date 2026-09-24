@@ -3,342 +3,155 @@ Projeto: Acompanhamento de Serviços
 Arquivo: main.js
 
 Responsável por:
-- Inicialização
-- Carregamento do JSON
-- Atualização automática
-- Aplicação dos filtros
-- Atualização de tabela e KPIs
+- Inicialização da aplicação
+- Carregamento e polling do JSON
+- Aplicação dos filtros dinâmicos
+- Atualização da tabela e dos KPIs
 ========================================================*/
 
 
-/*----------------------------------------------------------------
-                         VARIÁVEIS GLOBAIS
-----------------------------------------------------------------*/
-
+/* =======================================================
+   1. VARIÁVEIS GLOBAIS
+======================================================= */
 let dadosDashboard = null;
-
 let linhasDocumentos = [];
-
 let atualizando = false;
 
 
-/*----------------------------------------------------------------
-                         INICIALIZAÇÃO
-----------------------------------------------------------------*/
+/* =======================================================
+   2. INICIALIZAÇÃO DA APLICAÇÃO
+======================================================= */
 
 /*
     IMPORTANTE:
-
-    Os controles do menu de filtros são inicializados
-    ANTES de tentar carregar os dados.
-
-    Dessa forma, mesmo que o JSON ainda não exista,
-    o botão "Filtros" continua funcionando e podemos
-    testar o menu lateral normalmente.
+    Os controles do menu de filtros são inicializados ANTES
+    de tentar carregar os dados. Dessa forma, mesmo que o JSON
+    ainda não exista, o botão "Filtros" funciona normalmente.
 */
+document.addEventListener("DOMContentLoaded", () => {
+    // Configura eventos do menu de filtros com lista vazia inicial
+    inicializarFiltros([]);
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        /* ---------------------------------------------
-           Inicializa a interface dos filtros.
-
-           Ainda não temos dados, então passamos uma
-           lista vazia.
-
-           Isso é suficiente para configurar os eventos
-           de abertura/fechamento do menu.
-        --------------------------------------------- */
-
-        inicializarFiltros([]);
+    // Inicia o fluxo de carregamento dos dados
+    iniciarDashboard();
+});
 
 
-        /* ---------------------------------------------
-           Agora inicia o carregamento dos dados.
-        --------------------------------------------- */
+/* =======================================================
+   3. FLUXO PRINCIPAL DO DASHBOARD
+======================================================= */
 
-        iniciarDashboard();
-
-    }
-);
-
-
-/*----------------------------------------------------------------
-                         DASHBOARD
-----------------------------------------------------------------*/
-
+/**
+ * Orquestra o carregamento inicial dos dados e inicializa os componentes da tela.
+ */
 async function iniciarDashboard() {
-
     iniciarRelogio();
 
     try {
+        dadosDashboard = await carregarDados();
 
-        dadosDashboard =
-            await carregarDados();
+        // 1. Atualiza elementos do cabeçalho
+        atualizarCabecalho(dadosDashboard);
 
+        // 2. Extrai e normaliza os registros da tabela
+        linhasDocumentos = extrairLinhas(dadosDashboard).map(normalizarLinha);
 
-        /* -----------------------------------------------------
-           Cabeçalho
-        ----------------------------------------------------- */
+        // 3. Reconstrói as listas dos filtros dinâmicos com os dados recebidos
+        inicializarFiltros(linhasDocumentos);
 
-        atualizarCabecalho(
-            dadosDashboard
-        );
-
-
-        /* -----------------------------------------------------
-           Extrai as linhas da tabela
-        ----------------------------------------------------- */
-
-        linhasDocumentos =
-            extrairLinhas(
-                dadosDashboard
-            );
-
-
-        /* -----------------------------------------------------
-           Normalização
-        ----------------------------------------------------- */
-
-        linhasDocumentos =
-            linhasDocumentos.map(
-                normalizarLinha
-            );
-
-
-        /* -----------------------------------------------------
-           Filtros
-
-           Aqui os eventos NÃO serão registrados novamente.
-
-           A função apenas reconstruirá as listas
-           dinâmicas com os dados recebidos.
-        ----------------------------------------------------- */
-
-        inicializarFiltros(
-            linhasDocumentos
-        );
-
-
-        /* -----------------------------------------------------
-           Primeira atualização
-        ----------------------------------------------------- */
-
+        // 4. Executa a primeira renderização dos dados na tela
         atualizarDashboard();
 
+        // 5. Configura a atualização automática (polling) a cada 60 segundos
+        setInterval(buscarNovosDados, 60000);
 
-        /* -----------------------------------------------------
-           Atualização automática
-
-           Mantém a mesma ideia do Tempo Real Web:
-           60 segundos.
-        ----------------------------------------------------- */
-
-        setInterval(
-            buscarNovosDados,
-            60000
-        );
-
+    } catch (erro) {
+        console.error("Erro na inicialização do Dashboard:", erro);
     }
-
-    catch (erro) {
-
-        console.error(
-            "Erro na inicialização do Dashboard:",
-            erro
-        );
-
-    }
-
 }
 
 
-/*----------------------------------------------------------------
-                     EXTRAÇÃO DOS DADOS
-----------------------------------------------------------------*/
+/* =======================================================
+   4. EXTRAÇÃO E TRATAMENTO DE DADOS
+======================================================= */
 
-/*
-    O nome final da coleção ainda depende do Python.
-
-    Por isso esta função aceita inicialmente:
-
-        tabela
-        documentos
-        V_DOCUMENTO
-        dados
-*/
-
+/**
+ * Extrai a lista de registros do objeto JSON recebido,
+ * testando as possíveis chaves retornadas pela API/Python.
+ */
 function extrairLinhas(dados) {
-
     const possibilidades = [
-
+        dados?.Tabela,
         dados?.tabela,
-
         dados?.documentos,
-
         dados?.V_DOCUMENTO,
-
         dados?.dados
-
     ];
 
-
-    for (
-        const valor
-        of possibilidades
-    ) {
-
-        if (
-            Array.isArray(valor)
-        ) {
-
+    for (const valor of possibilidades) {
+        if (Array.isArray(valor)) {
             return valor;
-
         }
-
     }
 
-
-    console.warn(
-        "Nenhuma tabela de documentos encontrada no JSON."
-    );
-
-
+    console.warn("Nenhuma tabela de documentos encontrada no JSON.");
     return [];
-
 }
 
 
-/*----------------------------------------------------------------
-                  BUSCA NOVOS DADOS
-----------------------------------------------------------------*/
+/* =======================================================
+   5. ATUALIZAÇÃO AUTOMÁTICA (POLLING)
+======================================================= */
 
+/**
+ * Busca novos dados no servidor sem recarregar a página e atualiza a interface.
+ */
 async function buscarNovosDados() {
-
-    if (atualizando) {
-        return;
-    }
-
+    if (atualizando) return;
     atualizando = true;
 
-
     try {
+        const novosDados = await carregarDados();
+        dadosDashboard = novosDados;
 
-        const novosDados =
-            await carregarDados();
+        atualizarCabecalho(dadosDashboard);
 
+        linhasDocumentos = extrairLinhas(novosDados).map(normalizarLinha);
 
-        dadosDashboard =
-            novosDados;
-
-
-        atualizarCabecalho(
-            dadosDashboard
-        );
-
-
-        linhasDocumentos =
-            extrairLinhas(
-                novosDados
-            )
-            .map(
-                normalizarLinha
-            );
-
-
-        /*
-           Recria apenas as opções dos filtros dinâmicos.
-           Os eventos já foram configurados na inicialização.
-        */
-
-        atualizarOpcoesFiltrosDinamicos(
-            linhasDocumentos
-        );
-
+        // Recria apenas as opções dos filtros dinâmicos (os eventos já foram registrados)
+        atualizarOpcoesFiltrosDinamicos(linhasDocumentos);
 
         atualizarDashboard();
 
-    }
-
-    catch (erro) {
-
-        console.error(
-            "Erro ao buscar novos dados:",
-            erro
-        );
-
-    }
-
-    finally {
-
+    } catch (erro) {
+        console.error("Erro ao buscar novos dados:", erro);
+    } finally {
         atualizando = false;
-
     }
-
 }
 
 
-/*----------------------------------------------------------------
-             ATUALIZAÇÃO DA INTERFACE
-----------------------------------------------------------------*/
+/* =======================================================
+   6. ATUALIZAÇÃO DA INTERFACE (DOM)
+======================================================= */
 
+/**
+ * Aplica os filtros ativos e atualiza Tabela, KPIs e Títulos.
+ */
 function atualizarDashboard() {
+    if (!dadosDashboard) return;
 
-    if (!dadosDashboard) {
-        return;
-    }
+    const linhasFiltradas = filtrarLinhas(linhasDocumentos);
 
-
-    const linhasFiltradas =
-        filtrarLinhas(
-            linhasDocumentos
-        );
-
-
-    atualizarTabela(
-        linhasFiltradas
-    );
-
-
-    atualizarKPIs(
-        linhasFiltradas
-    );
-
-
-    atualizarTituloTabela(
-        linhasFiltradas.length
-    );
-
+    atualizarTabela(linhasFiltradas);
+    atualizarKPIs(linhasFiltradas, linhasDocumentos.length);
 }
 
-
-/*----------------------------------------------------------------
-      Atualiza somente listas dinâmicas
-----------------------------------------------------------------*/
-
-function atualizarOpcoesFiltrosDinamicos(
-    linhas
-) {
-
-    /*
-       Nesta primeira versão simplesmente reconstruímos
-       as listas.
-
-       Depois podemos preservar seleções existentes
-       com mais granularidade.
-    */
-
-    construirRegionais(
-        linhas
-    );
-
-
-    construirCentrosTrabalho(
-        linhas
-    );
-
-
+/**
+ * Reconstrói apenas as opções dinâmicas dos filtros (Regionais e Centros de Trabalho).
+ */
+function atualizarOpcoesFiltrosDinamicos(linhas) {
+    construirRegionais(linhas);
+    construirCentrosTrabalho(linhas);
     atualizarIndicadorFiltros();
-
 }

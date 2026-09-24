@@ -1394,191 +1394,214 @@ function atualizarIndicadorFiltros() {
 Aplica os filtros às linhas
 ========================================================*/
 
+/*========================================================
+    TESTE TEMPORÁRIO
+
+    Desliga TODOS os filtros.
+
+    Retorna diretamente as linhas recebidas,
+    sem verificar Regional, Tipo de Serviço, UC,
+    OS, Centro de Trabalho ou Status.
+
+    Objetivo:
+    descobrir se os dados brutos do JSON estão
+    chegando corretamente à tabela.
+========================================================*/
+
 function filtrarLinhas(
     linhas
 ) {
 
-    return linhas.filter(
-        linha => {
-
-            /* ---------------------------------------------
-               Regional
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.regionais.size > 0 &&
-                !estadoFiltros.regionais
-                    .has(
-                        linha.regional
-                    )
-            ) {
-
-                return false;
-
-            }
-
-
-            /* ---------------------------------------------
-               Tipo serviço
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.tiposServico.size > 0 &&
-                !estadoFiltros.tiposServico
-                    .has(
-                        linha.tpServico
-                    )
-            ) {
-
-                return false;
-
-            }
-
-
-            /* ---------------------------------------------
-               UC
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.uc &&
-                !String(
-                    linha.uc ?? ""
-                )
-                .toUpperCase()
-                .includes(
-                    estadoFiltros.uc
-                )
-            ) {
-
-                return false;
-
-            }
-
-
-            /* ---------------------------------------------
-               OS
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.os &&
-                !String(
-                    linha.nrDocumentoSimo ?? ""
-                )
-                .toUpperCase()
-                .includes(
-                    estadoFiltros.os
-                )
-            ) {
-
-                return false;
-
-            }
-
-
-            /* ---------------------------------------------
-               Tipo Centro
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.tipoCentroTrabalho !==
-                "TODOS"
-            ) {
-
-                let tipo =
-                    String(
-                        linha.tipoCentroTrabalho ?? ""
-                    )
-                    .trim()
-                    .toUpperCase();
-
-
-                /*
-                   Padroniza a forma interna do valor.
-                */
-
-                if (
-                    tipo === "EMPREITEIRA"
-                ) {
-
-                    tipo =
-                        "EMPREITEIRA";
-
-                }
-
-
-                if (
-                    tipo !==
-                    estadoFiltros.tipoCentroTrabalho
-                ) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            /* ---------------------------------------------
-               Centro de Trabalho
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.centrosTrabalho.size > 0 &&
-                !estadoFiltros.centrosTrabalho
-                    .has(
-                        String(
-                            linha.centroTrabalho ?? ""
-                        )
-                    )
-            ) {
-
-                return false;
-
-            }
-
-
-            /* ---------------------------------------------
-               Status
-            --------------------------------------------- */
-
-            if (
-                estadoFiltros.status !==
-                "TODOS"
-            ) {
-
-                const concluido =
-                    Boolean(
-                        linha.dtSaida
-                    );
-
-
-                if (
-                    estadoFiltros.status ===
-                    "CONCLUIDO" &&
-                    !concluido
-                ) {
-
-                    return false;
-
-                }
-
-
-                if (
-                    estadoFiltros.status ===
-                    "NAO_CONCLUIDO" &&
-                    concluido
-                ) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            return true;
-
-        }
-    );
+    return linhas;
 
 }
+
+
+//function filtrarLinhas(
+//    linhas
+//) {
+//
+//    return linhas.filter(
+//        linha => {
+//
+//            /* ---------------------------------------------
+//               Regional
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.regionais.size > 0 &&
+//                !estadoFiltros.regionais
+//                    .has(
+//                        linha.regional
+//                    )
+//            ) {
+//
+//                return false;
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               Tipo serviço
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.tiposServico.size > 0 &&
+//                !estadoFiltros.tiposServico
+//                    .has(
+//                        linha.tpServico
+//                    )
+//            ) {
+//
+//                return false;
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               UC
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.uc &&
+//                !String(
+//                    linha.uc ?? ""
+//                )
+//                .toUpperCase()
+//                .includes(
+//                    estadoFiltros.uc
+//                )
+//            ) {
+//
+//                return false;
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               OS
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.os &&
+//                !String(
+//                    linha.nrDocumentoSimo ?? ""
+//                )
+//                .toUpperCase()
+//                .includes(
+//                    estadoFiltros.os
+//                )
+//            ) {
+//
+//                return false;
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               Tipo Centro
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.tipoCentroTrabalho !==
+//                "TODOS"
+//            ) {
+//
+//                let tipo =
+//                    String(
+//                        linha.tipoCentroTrabalho ?? ""
+//                    )
+//                    .trim()
+//                    .toUpperCase();
+//
+//
+//                /*
+//                   Padroniza a forma interna do valor.
+//                */
+//
+//                if (
+//                    tipo === "EMPREITEIRA"
+//                ) {
+//
+//                    tipo =
+//                        "EMPREITEIRA";
+//
+//                }
+//
+//
+//                if (
+//                    tipo !==
+//                    estadoFiltros.tipoCentroTrabalho
+//                ) {
+//
+//                    return false;
+//
+//                }
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               Centro de Trabalho
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.centrosTrabalho.size > 0 &&
+//                !estadoFiltros.centrosTrabalho
+//                    .has(
+//                        String(
+//                            linha.centroTrabalho ?? ""
+//                        )
+//                    )
+//            ) {
+//
+//                return false;
+//
+//            }
+//
+//
+//            /* ---------------------------------------------
+//               Status
+//            --------------------------------------------- */
+//
+//            if (
+//                estadoFiltros.status !==
+//                "TODOS"
+//            ) {
+//
+//                const concluido =
+//                    Boolean(
+//                        linha.dtSaida
+//                    );
+//
+//
+//                if (
+//                    estadoFiltros.status ===
+//                    "CONCLUIDO" &&
+//                    !concluido
+//                ) {
+//
+//                    return false;
+//
+//                }
+//
+//
+//                if (
+//                    estadoFiltros.status ===
+//                    "NAO_CONCLUIDO" &&
+//                    concluido
+//                ) {
+//
+//                    return false;
+//
+//                }
+//
+//            }
+//
+//
+//            return true;
+//
+//        }
+//    );
+//
+//}

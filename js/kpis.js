@@ -9,13 +9,9 @@ Calcula os KPIs sobre as linhas atualmente filtradas.
 Atualiza todos os KPIs
 ========================================================*/
 
-function atualizarKPIs(linhas) {
-
-    const indicadores =
-        calcularKPIs(linhas);
-
+function atualizarKPIs(linhas, totalServicos) {
+    const indicadores = calcularKPIs(linhas, totalServicos);
     renderizarKPIs(indicadores);
-
 }
 
 
@@ -23,7 +19,7 @@ function atualizarKPIs(linhas) {
 Cálculo
 ========================================================*/
 
-function calcularKPIs(linhas) {
+function calcularKPIs(linhas, totalServicos) {
 
     const hoje =
         new Date();
@@ -48,8 +44,7 @@ function calcularKPIs(linhas) {
        Total de serviços
     ====================================================== */
 
-    const totalServicos =
-        linhas.length;
+    const servicosFiltrados = linhas.length;
 
 
     /* =====================================================
@@ -146,18 +141,13 @@ function calcularKPIs(linhas) {
 
     return {
 
-        totalServicos,
-
+        totalServicos:totalServicos,
+        servicosFiltrados:servicosFiltrados,
         servicosAtrasados,
-
         realizadosHoje,
-
         vencendoHoje,
-
         compensacaoHoje,
-
         compensacaoAmanha
-
     };
 
 }
@@ -178,10 +168,10 @@ function renderizarKPIs(kpi) {
 
 
     document.getElementById(
-        "kpiServicosAtrasados"
+        "kpiServicosFiltrados"
     ).textContent =
         formatarNumero(
-            kpi.servicosAtrasados
+            kpi.servicosFiltrados
         );
 
 
