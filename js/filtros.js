@@ -122,10 +122,6 @@ function inicializarFiltros(
     );
 
 
-    /*
-        Os eventos são configurados somente uma vez.
-    */
-
     if (
         !eventosFiltrosConfigurados
     ) {
@@ -143,6 +139,11 @@ function inicializarFiltros(
 }
 
 
+
+/*========================================================
+Regionais
+========================================================*/
+
 /*========================================================
 Regionais
 ========================================================*/
@@ -157,10 +158,12 @@ function construirRegionais(
             linha => linha.regional
         );
 
+
     const container =
         document.getElementById(
             "listaRegionais"
         );
+
 
     /*
        Segurança:
@@ -172,8 +175,19 @@ function construirRegionais(
         return;
     }
 
+
     container.innerHTML = "";
 
+
+    /*
+        ----------------------------------------------------
+        Cria os checkboxes individuais das Regionais
+        ----------------------------------------------------
+
+        Eles começam DESMARCADOS.
+
+        A opção "Todas" será a única marcada inicialmente.
+    */
 
     valores.forEach(
         valor => {
@@ -183,18 +197,20 @@ function construirRegionais(
                     "label"
                 );
 
+
             div.className =
                 "item-filtro";
+
 
             div.innerHTML = `
                 <input
                     type="checkbox"
                     class="check-regional"
                     value="${escaparHtml(valor)}"
-                    checked
                 >
                 <span>${escaparHtml(valor)}</span>
             `;
+
 
             container.appendChild(
                 div
@@ -204,13 +220,45 @@ function construirRegionais(
     );
 
 
+    /*
+        ----------------------------------------------------
+        Estado inicial
+        ----------------------------------------------------
+
+        Mesmo que os checkboxes individuais estejam
+        desmarcados visualmente, o estado interno contém
+        todas as Regionais.
+
+        Isso significa:
+
+            Todas = todas as Regionais
+
+        e, portanto, nenhum registro é excluído.
+    */
+
     estadoFiltros.regionais =
         new Set(
             valores
         );
 
 
-    sincronizarCheckTodasRegionais();
+    /*
+        ----------------------------------------------------
+        Marca "Todas"
+        ----------------------------------------------------
+    */
+
+    const todas =
+        document.getElementById(
+            "regionalTodas"
+        );
+
+
+    if (todas) {
+
+        todas.checked = true;
+
+    }
 
 }
 
@@ -260,9 +308,8 @@ function construirCentrosTrabalho(
             div.innerHTML = `
                 <input
                     type="checkbox"
-                    class="check-centro"
+                    class="check-regional"
                     value="${escaparHtml(valor)}"
-                    checked
                 >
                 <span>${escaparHtml(valor)}</span>
             `;
@@ -472,25 +519,80 @@ function configurarEventosFiltros() {
                     );
 
 
-                checks.forEach(
-                    cb =>
-                        cb.checked =
-                            evento.target.checked
-                );
+                /*
+                    -------------------------------------------------
+                    "Todas" ligada
+                    -------------------------------------------------
 
+                    Significa que nenhuma seleção específica
+                    de Regional está sendo aplicada.
 
-                estadoFiltros.regionais =
+                    Deixamos os checkboxes individuais desligados
+                    para que visualmente fique claro que "Todas"
+                    é uma opção própria.
+                */
+
+                if (
                     evento.target.checked
-                        ? new Set(
+                ) {
+
+                    checks.forEach(
+                        cb =>
+                            cb.checked = false
+                    );
+
+
+                    estadoFiltros.regionais =
+                        new Set(
                             Array.from(checks)
                                 .map(
                                     cb => cb.value
                                 )
-                        )
-                        : new Set();
+                        );
+
+                }
 
 
-                sincronizarCheckTodasRegionais();
+                /*
+                    -------------------------------------------------
+                    "Todas" desligada
+                    -------------------------------------------------
+
+                    Não fazemos nada imediatamente.
+
+                    Se nenhuma Regional individual estiver marcada,
+                    atualizarRegionais() restabelecerá
+                    automaticamente "Todas".
+                */
+
+                else {
+
+                    const selecionadas =
+                        Array.from(checks)
+                            .filter(
+                                cb => cb.checked
+                            );
+
+
+                    if (
+                        selecionadas.length === 0
+                    ) {
+
+                        evento.target.checked = true;
+
+
+                        estadoFiltros.regionais =
+                            new Set(
+                                Array.from(checks)
+                                    .map(
+                                        cb => cb.value
+                                    )
+                            );
+
+                    }
+
+                }
+
 
                 aplicarFiltros();
 
@@ -890,19 +992,73 @@ function atualizarRegionais() {
         );
 
 
-    estadoFiltros.regionais =
-        new Set(
-            Array.from(checks)
-                .filter(
-                    cb => cb.checked
-                )
-                .map(
-                    cb => cb.value
-                )
-        );
+    const selecionadas =
+        Array.from(checks)
+            .filter(
+                cb => cb.checked
+            )
+            .map(
+                cb => cb.value
+            );
 
 
-    sincronizarCheckTodasRegionais();
+    /*
+        Nenhuma Regional selecionada:
+        volta automaticamente para "Todas".
+    */
+
+    if (
+        selecionadas.length === 0
+    ) {
+
+        estadoFiltros.regionais =
+            new Set(
+                Array.from(checks)
+                    .map(
+                        cb => cb.value
+                    )
+            );
+
+
+        const todas =
+            document.getElementById(
+                "regionalTodas"
+            );
+
+
+        if (todas) {
+
+            todas.checked = true;
+
+        }
+
+    } else {
+
+        /*
+            Uma ou mais Regionais selecionadas:
+            "Todas" é desligado.
+        */
+
+        estadoFiltros.regionais =
+            new Set(
+                selecionadas
+            );
+
+
+        const todas =
+            document.getElementById(
+                "regionalTodas"
+            );
+
+
+        if (todas) {
+
+            todas.checked = false;
+
+        }
+
+    }
+
 
     aplicarFiltros();
 
@@ -1253,6 +1409,17 @@ function atualizarIndicadorFiltros() {
 
     /* -----------------------------------------------------
        Regional
+       -----------------------------------------------------
+
+       "Todas" não é considerada um filtro.
+
+       Portanto:
+
+       - nenhuma Regional individual selecionada
+         = 0 filtros;
+
+       - uma ou mais Regionais individuais selecionadas
+         = 1 filtro.
     ----------------------------------------------------- */
 
     const regionais =
@@ -1261,12 +1428,17 @@ function atualizarIndicadorFiltros() {
         );
 
 
+    const regionaisSelecionadas =
+        Array.from(
+            regionais
+        )
+        .filter(
+            cb => cb.checked
+        );
+
+
     if (
-        regionais.length > 0 &&
-        !Array.from(regionais)
-            .every(
-                cb => cb.checked
-            )
+        regionaisSelecionadas.length > 0
     ) {
 
         quantidade++;
@@ -1408,12 +1580,109 @@ Aplica os filtros às linhas
     chegando corretamente à tabela.
 ========================================================*/
 
-function filtrarLinhas(
-    linhas
-) {
+function filtrarLinhas(linhas) {
 
-    return linhas;
+    return linhas.filter(
+        linha => {
 
+            /* ---------------------------------------------
+                                 UC
+            ------------------------------------------------
+               Quando o campo estiver vazio, não filtra.
+
+               Quando houver um valor digitado, procura esse
+               valor dentro da UC da linha.
+
+               Usamos String() porque a UC vem do JSON como
+               número em algumas situações.
+            -----------------------------------------------*/
+            if (estadoFiltros.uc && !String(linha.uc ?? "")
+                .toUpperCase()
+                .includes(estadoFiltros.uc)
+            ) {
+                return false;
+            }
+
+            /* ---------------------------------------------
+                                  OS
+            ------------------------------------------------
+               O filtro pesquisa o número do documento SIMO,
+               que é o número da OS exibido na tabela.
+
+               Usamos String() para funcionar mesmo que o
+               valor venha do JSON como número.
+            ------------------------------------------------*/
+            if (
+                estadoFiltros.os &&
+                !String(
+                    linha.nrDocumentoSimo ?? ""
+                )
+                .toUpperCase()
+                .includes(
+                    estadoFiltros.os
+                )
+            ) {
+                return false;
+            }
+
+            /* ---------------------------------------------
+                                Regional
+            ------------------------------------------------
+               Quando nenhuma Regional estiver selecionada,
+               não há nenhuma Regional válida e, portanto,
+               nenhum registro deve aparecer.
+
+               Quando todas estiverem selecionadas, todas as
+               linhas correspondentes passam.
+
+               A comparação é feita ignorando diferenças
+               entre maiúsculas e minúsculas.
+            ------------------------------------------------*/
+            if (
+                estadoFiltros.regionais.size > 0
+            ) {
+
+                const regional =
+                    String(
+                        linha.regional ?? ""
+                    )
+                    .trim()
+                    .toUpperCase();
+
+
+                const regionaisSelecionadas =
+                    new Set(
+                        Array.from(
+                            estadoFiltros.regionais
+                        )
+                        .map(
+                            valor =>
+                                String(valor)
+                                    .trim()
+                                    .toUpperCase()
+                        )
+                    );
+
+
+                if (
+                    !regionaisSelecionadas.has(
+                        regional
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+            /*
+                Os demais filtros continuam desativados
+                neste primeiro teste.
+            */
+            return true;
+        }
+    );
 }
 
 

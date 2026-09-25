@@ -1,50 +1,11 @@
 /*========================================================
-Projeto : Lista UC SIMO x ANEEL
+Projeto : Acompanhamento de Serviços
 Arquivo : cabecalho.js
 
 Responsável pelas informações do cabeçalho:
     - Último Dado
     - Hora Atual
 ========================================================*/
-
-
-/*========================================================
-Formata data e hora
-========================================================*/
-
-function formatarDataHora(data) {
-
-    if (!(data instanceof Date) || isNaN(data)) {
-        return "--";
-    }
-
-    const dia = String(
-        data.getDate()
-    ).padStart(2, "0");
-
-    const mes = String(
-        data.getMonth() + 1
-    ).padStart(2, "0");
-
-    const ano = data.getFullYear();
-
-    const hora = String(
-        data.getHours()
-    ).padStart(2, "0");
-
-    const minuto = String(
-        data.getMinutes()
-    ).padStart(2, "0");
-
-    const segundo = String(
-        data.getSeconds()
-    ).padStart(2, "0");
-
-    return (
-        `${dia}/${mes}/${ano} ` +
-        `${hora}:${minuto}:${segundo}`
-    );
-}
 
 
 /*========================================================
@@ -56,19 +17,22 @@ function atualizarCabecalho(dados) {
     /*------------------------------------------------------
     Último dado disponível
 
-    Posteriormente virá dos metadados publicados pelo
+    Posteriormente poderá vir dos metadados publicados pelo
     Atualizador.
     ------------------------------------------------------*/
 
-    const elProcessamento = document.getElementById(
-        "dtProcessamento"
-    );
+    const elProcessamento =
+        document.getElementById(
+            "dtProcessamento"
+        );
 
     if (elProcessamento) {
 
         elProcessamento.textContent =
             dados?.ultimaAtualizacao ?? "--";
+
     }
+
 }
 
 
@@ -84,6 +48,7 @@ function iniciarRelogio() {
         atualizarRelogio,
         1000
     );
+
 }
 
 
@@ -93,16 +58,46 @@ Atualiza relógio
 
 function atualizarRelogio() {
 
-    const elRelogio = document.getElementById(
-        "relogioAtual"
-    );
+    const elRelogio = document.getElementById("relogioAtual");
 
     if (!elRelogio) {
         return;
     }
 
+    /*
+        Aqui utilizamos a função formatarDataHora()
+        definida em utils.js.
+
+        Ela aceita tanto:
+            - objetos Date;
+            - strings de data vindas do JSON.
+
+        Como o relógio envia new Date(), funciona
+        normalmente.
+
+        E, principalmente, não sobrescrevemos mais
+        a função global usada pela tabela.
+    */
+
     elRelogio.textContent =
         formatarDataHora(
             new Date()
         );
+
+}
+
+/*========================================================
+Atualiza horário da última atualização da página
+========================================================*/
+
+function atualizarDataAtualizacaoPagina() {
+
+    const elAtualizacao = document.getElementById("dtAtualizacaoPagina");
+
+    if (!elAtualizacao) {
+        return;
+    }
+
+    elAtualizacao.textContent =
+        formatarDataHora(new Date() );
 }

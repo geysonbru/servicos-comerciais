@@ -1,173 +1,150 @@
-/*=========================================================
-Tabela de Serviços
-=========================================================*/
+/*========================================================
+Projeto: Acompanhamento de Serviços
+Arquivo: tabela.css
 
+Responsável por:
+- Layout responsivo do container da tabela
+- Fixação do cabeçalho (sticky)
+- Alinhamento de colunas numéricas e datas
+- Estilização de hover e destaques visuais
+========================================================*/
+
+
+/* =======================================================
+   1. CONTAINER E ESTRUTURA DE ROLAGEM
+======================================================= */
+
+/* Container externo da tabela */
 .tabela {
-
     display: flex;
-
     flex-direction: column;
-
     overflow: hidden;
-
     width: 100%;
-
     min-width: 0;
+}
 
+/* Área de rolagem para tabelas grandes */
+.tabela-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 
-/*=========================================================
-Área de rolagem
-=========================================================*/
+/* =======================================================
+   2. TABELA E CABEÇALHO
+======================================================= */
 
-.tabela-scroll {
+#tabelaServicos {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+#tabelaServicos th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 6px 8px;
+    background: var(--azul);
+    color: white;
+    border-bottom: 1px solid #bfc7cf;
+    font-size: 13px;
+    text-align: center;
+}
+
+
+/* =======================================================
+   3. CÉLULAS E ALINHAMENTOS
+======================================================= */
+
+/* Estilo padrão das células */
+#tabelaServicos td {
+    padding: 4px 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+    text-align: left;
+}
+
+/* Colunas numéricas (Doc SIMO, Doc SAP, UC, Tempo Excedido, Comp. Hoje, Comp. Amanhã) */
+#tabelaServicos td:nth-child(2),
+#tabelaServicos td:nth-child(3),
+#tabelaServicos td:nth-child(12),
+#tabelaServicos td:nth-child(13) {
+    text-align: right;
+}
+
+/* Colunas de Datas (Abertura, Limite Exec., Conclusão) */
+#tabelaServicos td:nth-child(1),
+#tabelaServicos td:nth-child(6),
+#tabelaServicos td:nth-child(7),
+#tabelaServicos td:nth-child(8),
+#tabelaServicos td:nth-child(9),
+#tabelaServicos td:nth-child(10),
+#tabelaServicos td:nth-child(11){
+    text-align: center;
+}
+
+/* Colunas de Compensação */
+.valor-compensacao {text-align: right;}
+
+    /*Conteúdo interno da célula: Mantém o R$ à esquerda e o valor à direita.*/
+
+.valor-compensacao-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+    /*Símbolo da moeda*/
+.simbolo-moeda {
+    flex-shrink: 0;
+    text-align: left;
+}
+
+
+/*---------------------------------------------------------
+Valor monetário
+---------------------------------------------------------*/
+
+.valor-moeda {
 
     flex: 1;
 
-    min-height: 0;
-
-    overflow-y: auto;
-
-    overflow-x: auto;
-
-}
-
-
-/*=========================================================
-Tabela
-=========================================================*/
-
-#tabelaServicos {
-
-    width: max-content;
-
-    min-width: 100%;
-
-    border-collapse: collapse;
-
-    white-space: nowrap;
-
-}
-
-
-/*=========================================================
-Cabeçalho
-=========================================================*/
-
-#tabelaServicos th {
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 5;
-
-    padding: 6px 8px;
-
-    background: var(--azul);
-
-    color: white;
-
-    border-bottom: 1px solid #bfc7cf;
-
-    font-size: 13px;
-
-    text-align: center;
-
-}
-
-
-/*=========================================================
-Células
-=========================================================*/
-
-#tabelaServicos td {
-
-    padding: 4px 8px;
-
-    border-bottom: 1px solid #ddd;
-
-    font-size: 13px;
-
-    text-align: left;
-
-}
-
-
-/*=========================================================
-Colunas numéricas
-=========================================================*/
-
-#tabelaServicos td:nth-child(1),
-#tabelaServicos td:nth-child(2),
-#tabelaServicos td:nth-child(3),
-#tabelaServicos td:nth-child(11),
-#tabelaServicos td:nth-child(12),
-#tabelaServicos td:nth-child(13) {
-
     text-align: right;
-
-}
-
-
-/*=========================================================
-Datas
-=========================================================*/
-
-#tabelaServicos td:nth-child(8),
-#tabelaServicos td:nth-child(9),
-#tabelaServicos td:nth-child(10) {
-
-    text-align: center;
-
-}
-
-
-/*=========================================================
-Hover
-=========================================================*/
-
-#tabelaServicos tbody tr:hover {
-
-    background: #f3f7fa;
-
-}
-
-
-/*=========================================================
-Tempo excedido > 0
-
-Fica apenas como destaque visual.
-A regra do valor continua sendo calculada pelo SQL.
-=========================================================*/
-
-.tempo-excedido {
-
-    font-weight: bold;
-
-    color: #b00020;
-
-}
-
-
-/*=========================================================
-Compensação
-=========================================================*/
-
-.valor-compensacao {
 
     font-variant-numeric: tabular-nums;
 
 }
 
+/* =======================================================
+   4. EFEITOS E DESTAQUES VISUAIS
+======================================================= */
 
-/*=========================================================
-Título da tabela
-=========================================================*/
+/* Destaca a linha inteira ao passar o mouse */
+#tabelaServicos tbody tr:hover {
+    background: #f3f7fa;
+}
 
+/*
+   Destaque para serviços com tempo excedido > 0.
+   Obs: O cálculo do tempo continua sendo feito pela query SQL.
+*/
+.tempo-excedido {
+    font-weight: bold;
+    color: #b00020;
+}
+
+/* Garante o alinhamento proporcional dos números em valores monetários */
+.valor-compensacao {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Título do painel da tabela */
 #tituloTabela {
-
     text-align: center;
-
 }

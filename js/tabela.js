@@ -62,26 +62,25 @@ function inserirLinhaTabela(linha) {
         <td>${formatarDataHora(linha.dataLimite)}</td>
         <td>${formatarDataHora(linha.dataConclusao)}</td>
         <td class="${classeTempo}">${formatarNumero(linha.tempoExcedido)}</td>
-        <td class="valor-compensacao">${formatarMoeda(linha.compensacaoHoje)}</td>
-        <td class="valor-compensacao">${formatarMoeda(linha.compensacaoAmanha)}</td>
+
+        <td class="valor-compensacao">
+            <div class="valor-compensacao-conteudo">
+                <span class="simbolo-moeda">R$</span>
+                <span class="valor-moeda">
+                    ${formatarMoeda(linha.compensacaoHoje)}
+                </span>
+            </div>
+        </td>
+
+        <td class="valor-compensacao">
+            <div class="valor-compensacao-conteudo">
+                <span class="simbolo-moeda">R$</span>
+                <span class="valor-moeda">
+                    ${formatarMoeda(linha.compensacaoAmanha)}
+                </span>
+            </div>
+        </td>
     `;
 
     document.getElementById("tbodyServicos").appendChild(tr);
-}
-
-
-/* =======================================================
-   3. TÍTULO E CONTADORES
-======================================================= */
-
-/**
- * Atualiza o texto do título da tabela exibindo a quantidade total de registros.
- * @param {number} quantidade - Número de registros da lista filtrada.
- */
-function atualizarTituloTabela(quantidade) {
-    const titulo = document.getElementById("tituloTabela");
-
-    if (titulo) {
-        titulo.textContent = `Serviços (${formatarNumero(quantidade)})`;
-    }
 }

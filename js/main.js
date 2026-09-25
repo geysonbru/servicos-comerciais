@@ -26,13 +26,14 @@ let atualizando = false;
     IMPORTANTE:
     Os controles do menu de filtros são inicializados ANTES
     de tentar carregar os dados. Dessa forma, mesmo que o JSON
-    ainda não exista, o botão "Filtros" funciona normalmente.
+    ainda não exista ou ocorra erro de carregamento, o botão "Filtros"
+    continua funcionando normalmente.
 */
 document.addEventListener("DOMContentLoaded", () => {
     // Configura eventos do menu de filtros com lista vazia inicial
     inicializarFiltros([]);
 
-    // Inicia o fluxo de carregamento dos dados
+    // Inicia o fluxo principal do dashboard
     iniciarDashboard();
 });
 
@@ -42,9 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
 ======================================================= */
 
 /**
- * Orquestra o carregamento inicial dos dados e inicializa os componentes da tela.
+ * Orquestra o carregamento inicial, inicialização do relógio,
+ * normalização de dados e configuração do polling automático.
  */
 async function iniciarDashboard() {
+    // Exibe imediatamente o horário de carregamento da página
+    atualizarDataAtualizacaoPagina();
+
+    // Inicia o relógio em tempo real (1 em 1 segundo)
     iniciarRelogio();
 
     try {
@@ -59,11 +65,12 @@ async function iniciarDashboard() {
         // 3. Reconstrói as listas dos filtros dinâmicos com os dados recebidos
         inicializarFiltros(linhasDocumentos);
 
-        // 4. Executa a primeira renderização dos dados na tela
+        // 4. Executa a primeira renderização na tela
         atualizarDashboard();
 
-        // 5. Configura a atualização automática (polling) a cada 60 segundos
-        setInterval(buscarNovosDados, 60000);
+        // 5. Configura a atualização automática (polling) a cada 5 minutos
+        const intervalo = 1000 * 60 * 5;
+        setInterval(buscarNovosDados, intervalo);
 
     } catch (erro) {
         console.error("Erro na inicialização do Dashboard:", erro);
@@ -107,6 +114,7 @@ function extrairLinhas(dados) {
  * Busca novos dados no servidor sem recarregar a página e atualiza a interface.
  */
 async function buscarNovosDados() {
+    // Impede execuções concorrentes
     if (atualizando) return;
     atualizando = true;
 
@@ -114,18 +122,21 @@ async function buscarNovosDados() {
         const novosDados = await carregarDados();
         dadosDashboard = novosDados;
 
+        // Registra o horário do novo carregamento e atualiza cabeçalho
+        atualizarDataAtualizacaoPagina();
         atualizarCabecalho(dadosDashboard);
 
+        // Extrai e normaliza os novos registros
         linhasDocumentos = extrairLinhas(novosDados).map(normalizarLinha);
 
-        // Recria apenas as opções dos filtros dinâmicos (os eventos já foram registrados)
+        // Atualiza filtros dinâmicos e a interface
         atualizarOpcoesFiltrosDinamicos(linhasDocumentos);
-
         atualizarDashboard();
 
     } catch (erro) {
         console.error("Erro ao buscar novos dados:", erro);
     } finally {
+        // Libera a trava de atualização
         atualizando = false;
     }
 }
@@ -136,7 +147,7 @@ async function buscarNovosDados() {
 ======================================================= */
 
 /**
- * Aplica os filtros ativos e atualiza Tabela, KPIs e Títulos.
+ * Aplica os filtros ativos e atualiza a Tabela e os KPIs.
  */
 function atualizarDashboard() {
     if (!dadosDashboard) return;
@@ -146,6 +157,11 @@ function atualizarDashboard() {
     atualizarTabela(linhasFiltradas);
     atualizarKPIs(linhasFiltradas, linhasDocumentos.length);
 }
+
+
+/* =======================================================
+   7. ATUALIZAÇÃO DOS FILTROS DINÂMICOS
+======================================================= */
 
 /**
  * Reconstrói apenas as opções dinâmicas dos filtros (Regionais e Centros de Trabalho).

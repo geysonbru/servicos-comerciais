@@ -250,6 +250,7 @@ Também mantemos alguns nomes técnicos como compatibilidade.
 
 function normalizarLinha(linha) {
 
+
     /*--------------------------------------------------------
     Data de saída / conclusão
 
@@ -393,25 +394,31 @@ function normalizarLinha(linha) {
         /*----------------------------------------------------
         Tipo de Serviço
 
-        O JSON atual não publica uma coluna específica
-        TP_SERVICO.
+        O JSON publica SG_SERVICO.
 
-        Mantemos os nomes técnicos caso essa coluna seja
-        acrescentada futuramente.
+        Os dois primeiros caracteres de SG_SERVICO
+        correspondem ao tipo de serviço utilizado
+        pelo filtro:
+
+            CN
+            CT
+            MI
+            NT
+            RE
         ----------------------------------------------------*/
         tpServico:
             String(
                 obterCampo(
                     linha,
                     [
-                        "TP_SERVICO",
-                        "Tipo Serviço"
+                        "SG_SERVICO"
                     ],
                     ""
                 ) || ""
             )
                 .trim()
-                .toUpperCase(),
+                .toUpperCase()
+                .substring(0, 2),
 
 
         /*----------------------------------------------------
